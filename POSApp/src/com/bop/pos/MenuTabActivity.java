@@ -1,7 +1,8 @@
 package com.bop.pos;
 
-import android.app.Activity;
+import android.app.ActivityGroup;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,13 +10,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MenuTabActivity extends Activity {
+public class MenuTabActivity extends ActivityGroup {
 
     private final static int FP = ViewGroup.LayoutParams.FILL_PARENT;
     private final static int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -66,23 +69,33 @@ public class MenuTabActivity extends Activity {
 	 protected void onCreate(Bundle savedInstanceState) {
 		 super.onCreate(savedInstanceState);
 		 res = this.getResources();
-		 /*
-		 ListView listView = new ListView(this);
-		 setContentView(listView);
-		 listView.setBackgroundColor(Color.WHITE);
-		 */
-		 
 	     baseLayout = new LinearLayout(this);
 	     baseLayout.setOrientation(LinearLayout.VERTICAL);
 	     baseLayout.setGravity(Gravity.TOP+Gravity.CENTER_HORIZONTAL);
 	     setContentView(baseLayout);
 	        
 	     list = new ListView(this);
+	     list.setBackgroundColor(Color.WHITE);
 	     baseLayout.addView(list, new LinearLayout.LayoutParams(FP, FP));
 	     
 	     list.setAdapter(new ListAdapter(this)); 
 	     
+	     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	    	 @Override            
+	    	 public void onItemClick(AdapterView<?> parent
+	    			 , View view, int position, long id) {
+	    		 goToNextViewInTabView();
+	         }	 
+	     }); 
 	}
+	
+	private void goToNextViewInTabView(){
+		 baseLayout.removeAllViews();
+		 Intent intent = new Intent(MenuTabActivity.this,ItemListActivity.class);
+		 Window nextActivity = getLocalActivityManager().startActivity("ItemListActivity",intent);
+		 baseLayout.addView(nextActivity.getDecorView());
+	}
+ 
 	
     public class ListAdapter extends BaseAdapter {
         //private Context contextInAdapter;
@@ -124,7 +137,7 @@ public class MenuTabActivity extends Activity {
             TextView textView = (TextView) convertView.findViewById(R.id.filename);
             textView.setPadding(10, 0, 0, 0);
             textView.setText(photolist[position]);
-
+            
             return convertView; 
         }
     }

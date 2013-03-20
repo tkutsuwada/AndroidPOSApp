@@ -14,5 +14,6 @@ public class CustomerTabActivity extends Activity {
 		 view.setText("Customer");
 		 view.setBackgroundColor(Color.WHITE);
 		 setContentView(view);
+		 
 	}
 }
