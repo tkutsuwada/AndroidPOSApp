@@ -6,20 +6,23 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MenuTabActivity extends ActivityGroup {
-
+public class ItemListActivity extends ActivityGroup{
+	
     private final static int FP = ViewGroup.LayoutParams.FILL_PARENT;
     private final static int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
 	
@@ -27,31 +30,63 @@ public class MenuTabActivity extends ActivityGroup {
     private LinearLayout baseLayout;
     private ListView list;
     private final String[] photolist
-    = {"sample006"
-      , "sample001"
-      , "sample002"
-      , "sample003"
-      , "sample004"
-      , "sample005"};
-    
-    private final String[] categoryList =
-    	{
-    		"Accessories"
-    	    , "Personal Care"
-    	    , "Cosmetics"
-    	    , "Garments"
-    	    , "Health Care"
-    	    , "Stitching Supplies"};
+    = { "sample021"
+      , "sample022"
+      , "sample023"
+      , "sample024"
+      , "sample025"
+      , "sample026"
+      , "sample027"
+      , "sample028"
+      , "sample029"
+      , "sample030"
+      , "sample031"
+      , "sample032"
+      , "sample033"
+      , "sample034"
+      , "sample035"
+      , "sample036"
+      , "sample037"};
 	
 	@Override
 	 protected void onCreate(Bundle savedInstanceState) {
 		 super.onCreate(savedInstanceState);
+
+		 setBaseLayout();
+		 setBackButton();
+		 setListView();
+	}
+	
+	private void setBaseLayout(){
 		 res = this.getResources();
 	     baseLayout = new LinearLayout(this);
 	     baseLayout.setOrientation(LinearLayout.VERTICAL);
 	     baseLayout.setGravity(Gravity.TOP+Gravity.CENTER_HORIZONTAL);
 	     setContentView(baseLayout);
-	        
+	}
+	
+	private void setBackButton(){
+		
+	     Button backButton = new Button(this);
+	     backButton.setText("back");
+	     backButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				goToPreviousViewInTabView();
+			}
+		});
+	    baseLayout.addView(backButton);
+	    backButton.setWidth(100);
+	}
+	
+	private int getBackButtonWidth(){
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE); 
+        Display display = wm.getDefaultDisplay();
+        int displayWidth = display.getWidth();
+        return displayWidth/10;
+	}
+	
+	private void setListView(){
 	     list = new ListView(this);
 	     list.setBackgroundColor(Color.WHITE);
 	     baseLayout.addView(list, new LinearLayout.LayoutParams(FP, FP));
@@ -62,15 +97,16 @@ public class MenuTabActivity extends ActivityGroup {
 	    	 @Override            
 	    	 public void onItemClick(AdapterView<?> parent
 	    			 , View view, int position, long id) {
-	    		 goToNextViewInTabView();
+	    		 //goToNextViewInTabView();
 	         }	 
 	     }); 
 	}
 	
-	private void goToNextViewInTabView(){
+	
+	private void goToPreviousViewInTabView(){
 		 baseLayout.removeAllViews();
-		 Intent intent = new Intent(MenuTabActivity.this,ItemListActivity.class);
-		 Window nextActivity = getLocalActivityManager().startActivity("ItemListActivity",intent);
+		 Intent intent = new Intent(ItemListActivity.this,MenuTabActivity.class);
+		 Window nextActivity = getLocalActivityManager().startActivity("MenuTabActivity",intent);
 		 baseLayout.addView(nextActivity.getDecorView());
 	}
  
@@ -114,7 +150,7 @@ public class MenuTabActivity extends ActivityGroup {
             
             TextView textView = (TextView) convertView.findViewById(R.id.filename);
             textView.setPadding(10, 0, 0, 0);
-            textView.setText(categoryList[position]);
+            textView.setText(photolist[position]);
             
             return convertView; 
         }
@@ -125,4 +161,6 @@ public class MenuTabActivity extends ActivityGroup {
             , "drawable", "com.bop.pos");
         return resID;
     }
+
+
 }
